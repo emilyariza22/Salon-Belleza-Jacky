@@ -20,24 +20,30 @@ router.post('/', async (req, res) => {
       valor_tinturado,
       planchado,
       valor_planchado,
-      planchado_semipermanente,
-      valor_planchado_semipermanente,
+      planchado_hidratacion,
+      valor_planchado_hidratacion,
       keratina,
       valor_keratina,
+      peinados,
+      valor_peinados,
+      cejasgena,
+      valor_cejasgena,
       pago
     } = req.body;
 
-    // Precios por defecto
+    // Precios por defecto   
     const PRECIO_CORTE_MUJER = 14000;
-    const PRECIO_CORTE_HOMBRE = 10000;
+    const PRECIO_CORTE_HOMBRE = 14000;
     const PRECIO_BARBA_DEF = 4000;
     const PRECIO_CEJAS_CUCHILLA_DEF = 4000;
     const PRECIO_CEJAS_CERA_DEF = 6000;
     const PRECIO_CORTE_INCOMPLETO_DEF = 7000;
     const PRECIO_TINTURADO_DEF = 20000;
-    const PRECIO_PLANCHADO_DEF = 10000;
-    const PRECIO_PLANCHADO_SEMI_DEF = 30000;
+    const PRECIO_PLANCHADO_DEF = 20000;
+    const PRECIO_PLANCHADO_HIDRATACION_DEF = 50000;
     const PRECIO_KERATINA_DEF = 80000;
+    const PRECIO_PEINADOS_DEF = 15000;
+    const PRECIO_CEJAS_GENA_DEF = 10000;
 
     let total = 0;
     let tipoCejas = null;
@@ -87,17 +93,29 @@ router.post('/', async (req, res) => {
       total += valor;
     }
 
-    // Planchado semipermanente
-    if (planchado_semipermanente) {
-      const valor = valor_planchado_semipermanente
-        ? parseInt(valor_planchado_semipermanente)
-        : PRECIO_PLANCHADO_SEMI_DEF;
+    // Planchado con hidratación
+    if (planchado_hidratacion) {
+      const valor = valor_planchado_hidratacion
+        ? parseInt(valor_planchado_hidratacion)
+        : PRECIO_PLANCHADO_HIDRATACION_DEF;
       total += valor;
     }
 
     // Keratina
     if (keratina) {
       const valor = valor_keratina ? parseInt(valor_keratina) : PRECIO_KERATINA_DEF;
+      total += valor;
+    }
+
+    // Peinados
+    if (peinados) {
+      const valor = valor_peinados ? parseInt(valor_peinados) : PRECIO_PEINADOS_DEF;
+      total += valor;
+    }
+
+    // Cejas con henna (gena)
+    if (cejasgena) {
+      const valor = valor_cejasgena ? parseInt(valor_cejasgena) : PRECIO_CEJAS_GENA_DEF;
       total += valor;
     }
 
@@ -108,8 +126,9 @@ router.post('/', async (req, res) => {
       `INSERT INTO servicios (
         cliente, tipo_corte, corte_completo, barba, cejas, tipo_cejas, corte_incompleto,
         tinturado, planchado, planchado_semipermanente, keratina,
+        peinados, cejasgena,
         valor_total, pago, deuda, fecha
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,CURRENT_DATE)
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,CURRENT_DATE)
       RETURNING *`,
       [
         cliente,
@@ -121,8 +140,10 @@ router.post('/', async (req, res) => {
         corte_incompleto,
         tinturado,
         planchado,
-        planchado_semipermanente,
+        planchado_hidratacion,
         keratina,
+        peinados,
+        cejasgena,
         total,
         pago,
         deuda
