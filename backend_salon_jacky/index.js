@@ -12,9 +12,13 @@ app.use(express.json());
 // Rutas
 const serviciosRoutes = require('./routes/servicios');
 const ventasRoutes = require('./routes/ventas');
+const clientesRoutes = require('./routes/clientes'); // Agregado correctamente
+const ventaCatalogoRoutes = require("./routes/venta_catalogo");
 
+app.use("/api/venta-catalogo", ventaCatalogoRoutes);
 app.use('/api/servicios', serviciosRoutes);
 app.use('/api/ventas', ventasRoutes);
+app.use('/api/clientes', clientesRoutes); // Montado correctamente
 
 // Servidor en marcha
 app.listen(port, () => {
